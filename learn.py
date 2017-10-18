@@ -1,3 +1,4 @@
+from gym import wrappers
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
@@ -50,7 +51,8 @@ def main():
     plt.show()
 
     print("***Final run with final weights**")
-    play_multiple_episodes(env, 100, params, True)
+    env = wrappers.Monitor(env, 'videos')
+    play_multiple_episodes(env, 100, params, False)
 
 if __name__ == '__main__':
     main()
