@@ -1,17 +1,18 @@
 import gym
 import numpy as np
-import matplotlib,pyplot as plt
+import matplotlib.pyplot as plt
 
 def get_action(s, w):
     return 1 if s.dot(w) > 0 else 0
 
-def play_one_episode(env, params):
+def play_one_episode(env, params, show = False):
     observation = env.reset()
     done = False
     t = 0
 
     while not done and t < 200:
-        env.render()
+        if show:
+            env.render()
         t += 1
         action = get_action(observation, params)
         observation, reward, done, info = env.step(action)
@@ -19,10 +20,10 @@ def play_one_episode(env, params):
             break
     return t
 
-def play_multiple_episodes(env, T, params):
+def play_multiple_episodes(env, T, params, show = False):
     episode_lengths = np.empty(T)
     for i in range(T):
-        episode_lengths[i] = play_one_episode(env, params)
+        episode_lengths[i] = play_one_episode(env, params, show)
 
     avg_length = episode_lengths.mean()
     print("avg length: ", avg_length)
@@ -49,7 +50,7 @@ def main():
     plt.show()
 
     print("***Final run with final weights**")
-    play_multiple_episodes(env, 100, params)
+    play_multiple_episodes(env, 100, params, True)
 
 if __name__ == '__main__':
     main()
