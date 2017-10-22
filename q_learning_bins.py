@@ -18,3 +18,10 @@ class FeatureTransformer:
     
     def transform(self, parameter_list):
         pass
+
+class Model:
+    def __init__(self, parameter_list):
+        pass
+    
+    def predict(self, parameter_list):
+        pass
