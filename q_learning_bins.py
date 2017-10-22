@@ -11,3 +11,10 @@ def build_state(features):
 
 def to_bin(value, bins):
     return np.digitize(x=[valie], bins=bins)[0]
+
+class FeatureTransformer:
+    def __init__(self):
+        pass
+    
+    def transform(self, parameter_list):
+        pass
