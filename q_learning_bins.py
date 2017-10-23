@@ -19,7 +19,7 @@ class FeatureTransformer:
         self.pole_angle_bins = np.linspace(-0.4, 0.4, 9)
         self.pole_velovity_bins = np.linspace(-3.5, 3.5, 9)
     
-    def transform(self, parameter_list):
+    def transform(self, observation):
         cart_pos, cart_vel, pole_angle, pole_vel = observation
         return build_state([
             to_bin(cart_pos, self.cart_position_bins),
@@ -29,8 +29,14 @@ class FeatureTransformer:
         ])
 
 class Model:
-    def __init__(self, parameter_list):
-        pass
+    def __init__(self, env, feature_transformer):
+        self.env = env
+        self.feature_transformer = feature_transformer
+
+        num_states = 10**env.observation_space.shape[0]
+        num_actions = env.action_space.n
+        self.Q = np.random.uniform(low=-1, high=1, size=(num_states, num_actions))
     
-    def predict(self, parameter_list):
-        pass
+    def predict(self, s):
+        x = self.feature_transformer.transform(s)
+        return self.Q[x]
