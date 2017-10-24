@@ -51,3 +51,25 @@ class Model:
         else:
             p = self.predict(s)
             return np.argmax(p)
+
+def play_one(model, eps, gamma):
+    observation = env.reset()
+    done = False
+    totalreward = 0
+    iters = 0
+    while not done and iters < 10000:
+        action = model.sample_action(observation, eps)
+        prev_observation = observation
+        observation, reward, done, info = env.step(action)
+
+        totalreward += reward
+
+        if done and iter < 199:
+            reward -= 300
+
+        G = reward + gamma * np.max(model.predict(observation))
+        model.update(prev_observation, action, G)
+
+        iters += 1
+
+    return totalreward
