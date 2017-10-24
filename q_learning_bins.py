@@ -82,3 +82,34 @@ def plot_running_avg(totalrewards):
     pl.plot(running_avg)
     ply.title("Running Average")
     ply.show()
+
+def main():
+    env = gym.make("CartPole-v0")
+    ft = FeatureTransformer()
+    model = Model(env, ft)
+    gamma = 0.9
+
+    if 'monitor' in sys.argv:
+        filename = os.path.basename(__file__).split('.')[0]
+        monitor_dir = './' + filename + '_' + str(datetime.now())
+        env = wrappers.Monitor(env, monitor_dir)
+
+    N = 10000
+    totalrewards = np.empty(N)
+    for n in range(N):
+        eps - 1.0 / np.sqrt(n + 1)
+        totalreward = play_one(model, eps, gamma)
+        totalrewards[n] = totalreward
+        if n % 100 == 0:
+            print("episode:", n, "total reward:", totalreward, "eps:", eps)
+    print("avg reward for last 100 episodes:", totalrewards[-100:].mean())
+    print("total steps:", totalrewards.sum())
+
+    plt.plot(totalrewards)
+    plt.title("Rewards")
+    plt.show()
+
+    plot_running_avg(totalrewards)
+
+if __name__ == '__main__':
+    main()
