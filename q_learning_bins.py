@@ -73,3 +73,12 @@ def play_one(model, eps, gamma):
         iters += 1
 
     return totalreward
+
+def plot_running_avg(totalrewards):
+    N = len(totalrewards)
+    running_avg = np.empty(N)
+    for t in range(N):
+        running_avg[t] = totalrewards[max(0, t-100):(t+1)].mean()
+    pl.plot(running_avg)
+    ply.title("Running Average")
+    ply.show()
