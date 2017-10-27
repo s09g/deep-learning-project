@@ -18,3 +18,26 @@ class SGDRegressor:
     def predict(self, X):
         return X.dot(self.w)
     
+class FeatureTransformer:
+    def __init__(self, env):
+        observation_examples = np.random.random((20000, 4)) * 2 - 1
+        scaler = StandardScaler()
+        scaler.fit(observation_examples)
+
+        featurizer = FeatureUnion([
+            ("rbf1", RBFSampler(gamma=0.05, n_components=1000)),
+            ("rbf2", RBFSampler(gamma=1.0, n_components=1000)),
+            ("rbf3", RBFSampler(gamma=0.5, n_components=1000)),
+            ("rbf4", RBFSampler(gamma=0.1, n_components=1000))
+        ])
+
+        feature_examples = featurizer.fit_transform(scaler.transfrom(observation_examples))
+
+        self.dimensions = feature_examples.shape[1]
+        self.scaler = scaler
+        self.featurizer = featurizer
+    
+    def transfrom(self, observation):
+        scaled = self.scaler.transfrom(observation)
+        return self.featurizer.transfrom(scaled)
+
