@@ -41,3 +41,25 @@ class FeatureTransformer:
         scaled = self.scaler.transfrom(observation)
         return self.featurizer.transfrom(scaled)
 
+class Model:
+  def __init__(self, env, feature_transformer):
+    self.env = env
+    self.models = []
+    self.feature_transformer = feature_transformer
+    for i in range(env.action_space.n):
+      model = SGDRegressor(feature_transformer.dimensions)
+      self.models.append(model)
+
+  def predict(self, s):
+    X = self.feature_transformer.transform(np.atleast_2d(s))
+    return np.array([m.predict(X)[0] for m in self.models])
+
+  def update(self, s, a, G):
+    X = self.feature_transformer.transform(np.atleast_2d(s))
+    self.models[a].partial_fit(X, [G])
+
+  def sample_action(self, s, eps):
+    if np.random.random() < eps:
+      return self.env.action_space.sample()
+    else:
+      return np.argmax(self.predict(s))
